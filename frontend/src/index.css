@@ -23,12 +23,12 @@
 }
 
 :root[data-theme='dark'] {
-  --text: #a1a1aa;
-  --text-h: #f4f4f5;
-  --bg: #0f0f14;
-  --accent: #7f5af0;
-  --accent-gradient: linear-gradient(135deg, #7f5af0 0%, #6246ea 100%);
-  --bubble-ai: #1b1b1e;
+  --text: #71717a;
+  --text-h: #ffffff;
+  --bg: #050505;
+  --accent: #a855f7;
+  --accent-gradient: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+  --bubble-ai: #0f0f15;
   --bubble-user: var(--accent-gradient);
 }
 
@@ -44,6 +44,8 @@
 body {
   margin: 0;
   background-color: var(--bg);
+  background-image: radial-gradient(circle at 1px 1px, rgba(168, 85, 247, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
   color: var(--text);
   transition: background-color 0.3s ease, color 0.3s ease;
 }

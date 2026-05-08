@@ -1,0 +1,243 @@
+/* Research.css - Futuristic Career Intelligence Design */
+
+:root {
+  --primary-glow: #00f2ff;
+  --secondary-glow: #7000ff;
+  --bg-dark: #0a0a0f;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent-neon: #00f2ff;
+}
+
+.research-container {
+  padding: 2rem;
+  color: #fff;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+.research-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.research-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #fff, var(--primary-glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.research-subtitle {
+  color: #a0a0b0;
+  font-size: 1.1rem;
+}
+
+/* Feature Navigation */
+.feature-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+}
+
+.feature-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-item {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: 0.8rem 1.5rem;
+  border-radius: 100px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  color: #a0a0b0;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  border-color: var(--primary-glow);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+}
+
+.nav-item.active {
+  background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+  border: none;
+  color: #fff;
+  box-shadow: 0 5px 20px rgba(0, 242, 255, 0.3);
+}
+
+/* Dashboard Grid */
+.research-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 242, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 242, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Company Card Specifics */
+.company-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.company-logo {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.company-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.company-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  background: rgba(0, 242, 255, 0.1);
+  color: var(--primary-glow);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 242, 255, 0.2);
+}
+
+/* AI Section */
+.ai-section {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(112, 0, 255, 0.1), rgba(0, 242, 255, 0.1));
+  border: 1px solid rgba(112, 0, 255, 0.3);
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--primary-glow);
+}
+
+.ai-input-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.ai-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.ai-btn {
+  background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+  border: none;
+  border-radius: 12px;
+  padding: 0 1.5rem;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ai-btn:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+.view-details-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  padding: 0.6rem;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background: var(--primary-glow);
+  color: #000;
+  font-weight: 600;
+}
+
+.ai-response-box {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  border: 1px solid rgba(0, 242, 255, 0.2);
+  line-height: 1.6;
+}
+
+.response-content {
+  color: #d0d0e0;
+}
+
+.response-content h3, .response-content b {
+  color: var(--primary-glow);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}

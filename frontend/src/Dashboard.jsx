@@ -1,7 +1,7 @@
 import React from 'react';
 import './Dashboard.css';
 
-const Dashboard = ({ setCurrentView }) => {
+const Dashboard = ({ setCurrentView, theme, setTheme }) => {
   const cards = [
     {
       id: 'resume',

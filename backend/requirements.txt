@@ -1,0 +1,7 @@
+flask
+pandas
+openpyxl
+pymongo
+flask-cors
+python-dotenv
+langchain-groq

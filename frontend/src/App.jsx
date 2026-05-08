@@ -1,21 +1,25 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import logo from './assets/logo.png'
 import html2pdf from 'html2pdf.js'
 import PlacementPlan from './PlacementPlan'
 import Dashboard from './Dashboard'
+import PlacementPrep from './PlacementPrep'
+import Settings from './Settings'
+import Research from './Research'
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark')
   const [currentView, setCurrentView] = useState('dashboard')
+  const [activePrepMode, setActivePrepMode] = useState(null)
+  const [userName, setUserName] = useState(localStorage.getItem('chat_user_name') || '')
   
   // Onboarding States
-  const [userName, setUserName] = useState(localStorage.getItem('chat_user_name') || '')
+
   const [showOnboarding, setShowOnboarding] = useState(!localStorage.getItem('chat_user_name'))
   const [tempName, setTempName] = useState('')
 
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hi! I'm your AI Resume Assistant. How can I help you build your profile today?" }
+    { role: 'assistant', content: "Hi! I'm your pathForge AI. How can I help you build your profile today?" }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -27,6 +31,31 @@ function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    if (currentView === 'resume-builder') {
+      setMessages([]); // Clear for fresh start
+      setIsLoading(true);
+      
+      const sequence = [
+        "Hi 👋<br>Welcome to <b>PathForge AI Resume Builder</b>.",
+        "I'll help you create a professional ATS-friendly resume step by step 🚀",
+        "Let's get started!",
+        "<b>Step 1 of 9</b>:<br>What's your full name?"
+      ];
+
+      let currentDelay = 500;
+      sequence.forEach((text, i) => {
+        setTimeout(() => {
+          setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+          if (i === sequence.length - 1) setIsLoading(false);
+        }, currentDelay);
+        currentDelay += 1500; // 1.5s delay between messages
+      });
+    } else if (currentView === 'dashboard') {
+       setMessages([{ role: 'assistant', content: "Hi! I'm your pathForge AI. How can I help you build your profile today?" }]);
+    }
+  }, [currentView]);
+
   const handleOnboardingSubmit = (e) => {
     e.preventDefault();
     if (tempName.trim()) {
@@ -36,27 +65,31 @@ function App() {
     }
   };
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault()
-    if (!input.trim() || isLoading) return
+  const handleSendMessage = async (e, forcedInput = null) => {
+    if (e) e.preventDefault()
+    const messageContent = forcedInput || input
+    if (!messageContent.trim() || isLoading) return
 
-    const userMessage = { role: 'user', content: input }
+    const userMessage = { role: 'user', content: messageContent }
     const updatedMessages = [...messages, userMessage]
     setMessages(updatedMessages)
     setInput('')
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/chat', {
+      const response = await fetch('http://127.0.0.1:5000/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: updatedMessages }),
+        body: JSON.stringify({ 
+          messages: updatedMessages,
+          mode: activePrepMode || currentView
+        }),
       })
       
       const data = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.detail || 'Server error');
+        throw new Error(data.error || 'Server error');
       }
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.response }])
@@ -91,10 +124,34 @@ function App() {
       <div className="onboarding-full-page">
         <div className="onboarding-card animate-zoom-in">
           <div className="onboarding-header">
-            <div className="logo-icon large">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+            <div className="sidebar-brand" style={{ marginBottom: '1rem' }}>
+              <div className="brand-logo-wrapper">
+                <div className="brand-logo">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '28px', height: '28px' }}>
+                    <path d="M7 21V3H14C17.3137 3 20 5.68629 20 9C20 12.3137 17.3137 15 14 15H7" stroke="url(#logo-grad-onboarding)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 15L16 19L12 23" stroke="url(#logo-grad-onboarding)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <defs>
+                      <linearGradient id="logo-grad-onboarding" x1="7" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#a855f7" />
+                        <stop offset="1" stopColor="#22d3ee" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div className="brand-logo-glow"></div>
+              </div>
+              <div className="brand-text" style={{ textAlign: 'left' }}>
+                <div className="brand-name">
+                  <span className="name-main">PathForge</span>
+                  <span className="name-ai">AI</span>
+                </div>
+                <div className="brand-tagline">Forge Your Future</div>
+              </div>
             </div>
-            <h2>Welcome to AI Resume Assistant</h2>
+            <div className="ai-powered-badge" style={{ marginBottom: '2rem' }}>
+              <span>✨</span> AI POWERED SYSTEM
+            </div>
+            <h2>Welcome to pathForge AI</h2>
             <p>Let’s personalize your experience</p>
           </div>
           <form onSubmit={handleOnboardingSubmit}>
@@ -118,56 +175,163 @@ function App() {
   // STEP 2: APP SCREEN
   return (
     <div className={`app-container dark`}>
-      <aside className="sidebar">
-        <div className="sidebar-logo">
-          <div className="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+      <aside className="sidebar premium-sidebar">
+        {/* --- BRAND SECTION --- */}
+        <div className="sidebar-brand-container" onClick={() => setCurrentView('dashboard')}>
+          <div className="brand-flex">
+            <div className="brand-logo-main">
+              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="90" height="90" rx="20" className="logo-border-rect" />
+                <path d="M35 75V25H60C68.2843 25 75 31.7157 75 40C75 48.2843 68.2843 55 60 55H35" stroke="url(#logo-path-grad)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M45 55C45 55 50 65 65 65" stroke="url(#logo-path-grad)" strokeWidth="6" strokeLinecap="round" className="path-line" />
+                <path d="M60 60L65 65L60 70" stroke="url(#logo-path-grad)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+                <defs>
+                  <linearGradient id="logo-path-grad" x1="35" y1="25" x2="75" y2="75" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#a855f7" />
+                    <stop offset="1" stopColor="#22d3ee" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="logo-glow-inner"></div>
+            </div>
+            <div className="brand-info">
+              <div className="brand-title">
+                <span className="brand-path">PathForge</span>
+                <span className="brand-ai">AI</span>
+              </div>
+              <div className="brand-tagline-expanded">FORGE YOUR FUTURE</div>
+            </div>
+          </div>
+          
+          <div className="ai-badge-container">
+            <div className="brand-divider-neon"></div>
+            <div className="premium-ai-badge">
+              <span className="sparkle">✨</span> AI POWERED <span className="sparkle">✨</span>
+            </div>
+            <div className="brand-divider-neon"></div>
           </div>
         </div>
         
-        <nav className="sidebar-nav">
-          <button className={`side-nav-item ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentView('dashboard')} title="Dashboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+        {/* --- NAVIGATION --- */}
+        <nav className="sidebar-nav-premium">
+          <button className={`nav-card ${currentView === 'dashboard' ? 'active' : ''}`} onClick={() => setCurrentView('dashboard')}>
+            <div className="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+            </div>
             <span>Dashboard</span>
           </button>
-          <button className={`side-nav-item ${currentView === 'resume-builder' ? 'active' : ''}`} onClick={() => setCurrentView('resume-builder')} title="Resume Builder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+          
+          <button className={`nav-card ${currentView === 'resume-builder' ? 'active' : ''}`} onClick={() => setCurrentView('resume-builder')}>
+            <div className="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+            </div>
             <span>Resume Builder</span>
           </button>
-          <button className={`side-nav-item ${currentView === 'placement-prep' ? 'active' : ''}`} onClick={() => setCurrentView('placement-prep')} title="Placement Prep">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          
+          <button className={`nav-card ${currentView === 'placement-prep' ? 'active' : ''}`} onClick={() => setCurrentView('placement-prep')}>
+            <div className="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
             <span>Placement Prep</span>
           </button>
-          <button className={`side-nav-item ${currentView === 'research' ? 'active' : ''}`} onClick={() => setCurrentView('research')} title="Research">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          
+          <button className={`nav-card ${currentView === 'research' ? 'active' : ''}`} onClick={() => setCurrentView('research')}>
+            <div className="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
             <span>Research</span>
           </button>
-          <button className="side-nav-item" title="Settings">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+          
+          <button className={`nav-card ${currentView === 'settings' ? 'active' : ''}`} onClick={() => setCurrentView('settings')}>
+            <div className="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+            </div>
             <span>Settings</span>
           </button>
         </nav>
 
-        <div className="sidebar-footer">
-          <div className="user-profile-small">
-            <div className="avatar-micro">{userName ? userName[0].toUpperCase() : 'U'}</div>
-            <span>{userName}</span>
+        {/* --- PROFILE & LOGOUT --- */}
+        <div className="sidebar-footer-premium">
+          <div className="brand-divider-soft"></div>
+          
+          <button className="theme-toggle-nav" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+             <div className="nav-icon">
+              {theme === 'light' ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              )}
+             </div>
+             <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          </button>
+
+          <div className="profile-card-premium">
+            <div className="avatar-premium">{userName ? userName.charAt(0).toUpperCase() : 'U'}</div>
+            <div className="profile-info">
+              <span className="profile-name">{userName}</span>
+              <span className="profile-subtitle">View Profile</span>
+            </div>
+            <svg className="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg>
           </div>
-          <button className="logout-btn" onClick={() => { localStorage.removeItem('chat_user_name'); window.location.reload(); }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>
-            <span>Logout</span>
+
+          <button className="logout-card-premium" onClick={() => { localStorage.removeItem('chat_user_name'); window.location.reload(); }}>
+            <div className="logout-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+            </div>
+            <div className="logout-text">
+              <span className="logout-title">Logout</span>
+              <span className="logout-subtitle">See you soon!</span>
+            </div>
           </button>
         </div>
       </aside>
 
       <main className="main-wrapper">
+        <div className="global-theme-toggle">
+          <div 
+            className={`theme-switch-pill ${theme}`} 
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          >
+            <div className="switch-knob">
+              {theme === 'light' ? '☀️' : '🌙'}
+            </div>
+            <span className="switch-icon moon">🌙</span>
+            <span className="switch-icon sun">☀️</span>
+          </div>
+        </div>
+        
         {currentView === 'dashboard' ? (
-          <Dashboard setCurrentView={setCurrentView} />
+          <Dashboard setCurrentView={setCurrentView} theme={theme} setTheme={setTheme} />
         ) : currentView === 'resume-builder' ? (
           <PlacementPlan 
             userName={userName}
             assistantProps={{ messages, input, setInput, handleSendMessage, isLoading, handleDownloadPDF, messagesEndRef, textareaRef }} 
           />
+        ) : currentView === 'placement-prep' ? (
+          activePrepMode ? (
+            <PlacementPlan 
+              userName={userName}
+              assistantProps={{ messages, input, setInput, handleSendMessage, isLoading, handleDownloadPDF, messagesEndRef, textareaRef }} 
+            />
+          ) : (
+            <PlacementPrep onSelectMode={(mode) => {
+              if (mode === 'coding') {
+                window.open('http://localhost:5001', '_blank');
+              } else if (mode === 'interview') {
+                setActivePrepMode('interview');
+                setMessages([{ 
+                  role: 'assistant', 
+                  content: "Welcome to Interview Prep! I'm here to help you with HR, behavioral, and mock interviews. Should we start with some common HR questions, or would you like to do a mock simulation?" 
+                }]);
+              } else if (mode === 'aptitude') {
+                window.open('http://localhost:5002', '_blank');
+              }
+            }} />
+          )
+        ) : currentView === 'research' ? (
+          <Research />
+        ) : currentView === 'settings' ? (
+          <Settings theme={theme} setTheme={setTheme} />
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#a0a0b0', flexDirection: 'column' }}>
             <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Coming Soon</h2>

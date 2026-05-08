@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 
 const PlacementPlan = ({ userName, assistantProps }) => {
+  useEffect(() => {
+    assistantProps.messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [assistantProps.messages, assistantProps.isLoading]);
+
   return (
     <div className="chat-focused-layout">
       {/* ── Header ── */}
       <header className="minimal-chat-header">
-        <h1>{userName} | AI Resume Assistant</h1>
+        <h1>{userName} | pathForge AI</h1>
       </header>
 
       {/* ── Chat Messages ── */}
@@ -31,7 +35,7 @@ const PlacementPlan = ({ userName, assistantProps }) => {
                   )}
 
                   <div className="bubble-meta">
-                    <span>12:{30 + index} PM</span>
+                    <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 </div>
               </div>
@@ -58,7 +62,7 @@ const PlacementPlan = ({ userName, assistantProps }) => {
             <textarea 
               ref={assistantProps.textareaRef}
               className="auto-resize-textarea"
-              placeholder={`Message AI Resume Assistant...`} 
+              placeholder={`Message pathForge AI...`} 
               value={assistantProps.input}
               onChange={(e) => {
                 assistantProps.setInput(e.target.value);

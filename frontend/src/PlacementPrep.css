@@ -1,0 +1,129 @@
+.prep-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  padding: 3rem 2rem;
+  transition: all 0.5s ease;
+}
+
+.prep-header {
+  text-align: center;
+  margin-bottom: 5rem;
+  z-index: 2;
+  animation: prepFadeInDown 0.8s ease-out;
+}
+
+.prep-glowing-tag {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--neon-purple);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme="light"] .prep-glowing-tag {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--premium-indigo);
+}
+
+.prep-main-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  letter-spacing: -2px;
+  color: var(--text-primary);
+}
+
+.prep-main-title span {
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.prep-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.prep-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  z-index: 2;
+}
+
+.prep-glass-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.prep-glass-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--neon-purple);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .prep-glass-card:hover {
+  border-color: var(--premium-indigo);
+}
+
+.prep-card-icon-box {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 12px;
+  color: var(--neon-purple);
+  transition: all 0.3s ease;
+}
+
+[data-theme="light"] .prep-card-icon-box {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--premium-indigo);
+}
+
+.prep-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.prep-card-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 992px) {
+  .prep-main-title { font-size: 3rem; }
+  .prep-cards-grid { grid-template-columns: 1fr; }
+}

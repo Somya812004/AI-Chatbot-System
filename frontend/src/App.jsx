@@ -6,6 +6,8 @@ import Dashboard from './Dashboard'
 import PlacementPrep from './PlacementPrep'
 import Settings from './Settings'
 import Research from './Research'
+import ResumeBuilder from './ResumeBuilder'
+
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark')
@@ -124,32 +126,18 @@ function App() {
       <div className="onboarding-full-page">
         <div className="onboarding-card animate-zoom-in">
           <div className="onboarding-header">
-            <div className="sidebar-brand" style={{ marginBottom: '1rem' }}>
-              <div className="brand-logo-wrapper">
-                <div className="brand-logo">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '28px', height: '28px' }}>
-                    <path d="M7 21V3H14C17.3137 3 20 5.68629 20 9C20 12.3137 17.3137 15 14 15H7" stroke="url(#logo-grad-onboarding)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12 15L16 19L12 23" stroke="url(#logo-grad-onboarding)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <defs>
-                      <linearGradient id="logo-grad-onboarding" x1="7" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#a855f7" />
-                        <stop offset="1" stopColor="#22d3ee" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </div>
-                <div className="brand-logo-glow"></div>
+            <div className="onboarding-brand">
+              <div className="brand-logo-main" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }}>
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="10" width="80" height="80" rx="16" fill="var(--indigo-600)" />
+                  <path d="M35 70V30H55C62.5 30 68 35.5 68 43C68 50.5 62.5 56 55 56H35" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M50 56L68 70" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
-              <div className="brand-text" style={{ textAlign: 'left' }}>
-                <div className="brand-name">
-                  <span className="name-main">PathForge</span>
-                  <span className="name-ai">AI</span>
-                </div>
-                <div className="brand-tagline">Forge Your Future</div>
+              <div className="brand-title" style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
+                <span className="brand-path" style={{ fontSize: '1.5rem' }}>PathForge</span>
+                <span className="brand-ai" style={{ fontSize: '1.5rem' }}>AI</span>
               </div>
-            </div>
-            <div className="ai-powered-badge" style={{ marginBottom: '2rem' }}>
-              <span>✨</span> AI POWERED SYSTEM
             </div>
             <h2>Welcome to pathForge AI</h2>
             <p>Let’s personalize your experience</p>
@@ -172,43 +160,24 @@ function App() {
     );
   }
 
-  // STEP 2: APP SCREEN
   return (
-    <div className={`app-container dark`}>
+    <div className={`app-container ${theme}`}>
       <aside className="sidebar premium-sidebar">
         {/* --- BRAND SECTION --- */}
         <div className="sidebar-brand-container" onClick={() => setCurrentView('dashboard')}>
           <div className="brand-flex">
             <div className="brand-logo-main">
-              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="90" height="90" rx="20" className="logo-border-rect" />
-                <path d="M35 75V25H60C68.2843 25 75 31.7157 75 40C75 48.2843 68.2843 55 60 55H35" stroke="url(#logo-path-grad)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M45 55C45 55 50 65 65 65" stroke="url(#logo-path-grad)" strokeWidth="6" strokeLinecap="round" className="path-line" />
-                <path d="M60 60L65 65L60 70" stroke="url(#logo-path-grad)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                <defs>
-                  <linearGradient id="logo-path-grad" x1="35" y1="25" x2="75" y2="75" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#a855f7" />
-                    <stop offset="1" stopColor="#22d3ee" />
-                  </linearGradient>
-                </defs>
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                <rect x="3" y="3" width="18" height="18" rx="4" />
+                <path d="M7 14l3-3 3 3M7 10l3-3 3 3" />
               </svg>
-              <div className="logo-glow-inner"></div>
             </div>
             <div className="brand-info">
               <div className="brand-title">
                 <span className="brand-path">PathForge</span>
                 <span className="brand-ai">AI</span>
               </div>
-              <div className="brand-tagline-expanded">FORGE YOUR FUTURE</div>
             </div>
-          </div>
-          
-          <div className="ai-badge-container">
-            <div className="brand-divider-neon"></div>
-            <div className="premium-ai-badge">
-              <span className="sparkle">✨</span> AI POWERED <span className="sparkle">✨</span>
-            </div>
-            <div className="brand-divider-neon"></div>
           </div>
         </div>
         
@@ -252,31 +221,24 @@ function App() {
 
         {/* --- PROFILE & LOGOUT --- */}
         <div className="sidebar-footer-premium">
-          <div className="brand-divider-soft"></div>
-          
-          <button className="theme-toggle-nav" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-             <div className="nav-icon">
-              {theme === 'light' ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-              )}
-             </div>
-             <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-          </button>
+          <div className="mode-toggle-row">
+            <span className="mode-label">Light Mode</span>
+            <div className={`toggle-switch-wrap ${theme}`} onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+              <div className="toggle-knob"></div>
+            </div>
+          </div>
 
           <div className="profile-card-premium">
-            <div className="avatar-premium">{userName ? userName.charAt(0).toUpperCase() : 'U'}</div>
+            <div className="avatar-premium">A</div>
             <div className="profile-info">
-              <span className="profile-name">{userName}</span>
+              <span className="profile-name">Admin</span>
               <span className="profile-subtitle">View Profile</span>
             </div>
-            <svg className="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg>
           </div>
 
           <button className="logout-card-premium" onClick={() => { localStorage.removeItem('chat_user_name'); window.location.reload(); }}>
             <div className="logout-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
             </div>
             <div className="logout-text">
               <span className="logout-title">Logout</span>
@@ -293,20 +255,22 @@ function App() {
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
           >
             <div className="switch-knob">
-              {theme === 'light' ? '☀️' : '🌙'}
+              {theme === 'light' ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '14px' }}><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '14px' }}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+              )}
             </div>
-            <span className="switch-icon moon">🌙</span>
-            <span className="switch-icon sun">☀️</span>
+            <span className="switch-icon">🌙</span>
+            <span className="switch-icon">☀️</span>
           </div>
         </div>
         
         {currentView === 'dashboard' ? (
           <Dashboard setCurrentView={setCurrentView} theme={theme} setTheme={setTheme} />
         ) : currentView === 'resume-builder' ? (
-          <PlacementPlan 
-            userName={userName}
-            assistantProps={{ messages, input, setInput, handleSendMessage, isLoading, handleDownloadPDF, messagesEndRef, textareaRef }} 
-          />
+          <ResumeBuilder userName={userName} />
+
         ) : currentView === 'placement-prep' ? (
           activePrepMode ? (
             <PlacementPlan 
@@ -316,15 +280,11 @@ function App() {
           ) : (
             <PlacementPrep onSelectMode={(mode) => {
               if (mode === 'coding') {
-                window.open('http://localhost:5001', '_blank');
+                window.open('http://localhost:5000/coding', '_blank');
               } else if (mode === 'interview') {
-                setActivePrepMode('interview');
-                setMessages([{ 
-                  role: 'assistant', 
-                  content: "Welcome to Interview Prep! I'm here to help you with HR, behavioral, and mock interviews. Should we start with some common HR questions, or would you like to do a mock simulation?" 
-                }]);
+                window.open('http://localhost:5000/interview', '_blank');
               } else if (mode === 'aptitude') {
-                window.open('http://localhost:5002', '_blank');
+                window.open('http://localhost:5000/aptitude', '_blank');
               }
             }} />
           )

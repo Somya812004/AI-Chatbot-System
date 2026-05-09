@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Assistant | Placement Prep</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --sidebar-bg: #0a0a0f;
+            --accent: #10b981; /* Emerald */
+            --text-main: #ffffff;
+            --text-sub: #71717a;
+            --card-bg: #0f0f15;
+            --border: rgba(255, 255, 255, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 1px 1px, rgba(16, 185, 129, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .topic-section {
+            margin-bottom: 2rem;
+        }
+
+        .topic-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            margin-bottom: 1rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .topic-link {
+            display: block;
+            padding: 0.65rem 1rem;
+            color: #d1d1d6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            text-align: left;
+            width: 100%;
+        }
+
+        .topic-link:hover {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            overflow-y: auto;
+            align-items: center;
+            position: relative;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-bottom: 10rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-top: 10rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero-section h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .hero-section h1 span {
+            background: linear-gradient(90deg, #fff, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            color: var(--text-sub);
+            font-size: 1.25rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .answer-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 24px;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: #e4e4e7;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            transform: translateZ(50px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px) translateZ(-100px) rotateX(10deg); }
+            to { opacity: 1; transform: translateY(0) translateZ(50px) rotateX(0); }
+        }
+
+        .input-area-wrapper {
+            position: fixed;
+            bottom: 3rem;
+            width: calc(100% - 320px);
+            display: flex;
+            justify-content: center;
+            padding: 0 2rem;
+            background: linear-gradient(transparent, var(--bg) 50%);
+        }
+
+        .input-area {
+            width: 100%;
+            max-width: 850px;
+            background: #16161e;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.1);
+        }
+
+        textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            padding: 0.5rem;
+            height: 44px;
+            line-height: 1.5;
+            font-family: inherit;
+        }
+
+        .send-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Interview Assistant</h2>
+        
+        <div class="topic-section">
+            <span class="topic-title">HR Rounds</span>
+            <form action="/interview" method="POST">
+                <input type="hidden" name="question" value="Tell me about yourself.">
+                <button type="submit" class="topic-link">Introduce Yourself</button>
+            </form>
+            <form action="/interview" method="POST">
+                <input type="hidden" name="question" value="What are your strengths and weaknesses?">
+                <button type="submit" class="topic-link">Strengths & Weaknesses</button>
+            </form>
+            <form action="/interview" method="POST">
+                <input type="hidden" name="question" value="Why should we hire you?">
+                <button type="submit" class="topic-link">Why hire you?</button>
+            </form>
+        </div>
+
+        <div class="topic-section">
+            <span class="topic-title">Behavioral</span>
+            <form action="/interview" method="POST">
+                <input type="hidden" name="question" value="Tell me about a time you handled a difficult situation.">
+                <button type="submit" class="topic-link">Conflict Resolution</button>
+            </form>
+            <form action="/interview" method="POST">
+                <input type="hidden" name="question" value="Tell me about a time you worked in a team.">
+                <button type="submit" class="topic-link">Teamwork</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="chat-container">
+            {% if answer %}
+            <div class="answer-box">
+                {{ answer | safe }}
+            </div>
+            {% else %}
+            <div class="hero-section">
+                <h1>Interview <span>Assistant</span></h1>
+                <p>Prepare for HR, behavioral, and mock interviews with AI guidance.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="input-area-wrapper">
+            <form action="/interview" method="POST" class="input-area">
+                <textarea name="question" placeholder="Type an answer or ask an interview question..."></textarea>
+                <button type="submit" class="send-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

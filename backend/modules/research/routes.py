@@ -52,3 +52,9 @@ def ai_guidance():
     data = request.json
     query = data.get('query', '')
     return jsonify(get_career_guidance(query))
+
+@research_bp.route('/unified', methods=['POST'])
+def unified():
+    data = request.json
+    query = data.get('query', '')
+    return jsonify(get_career_guidance(query))

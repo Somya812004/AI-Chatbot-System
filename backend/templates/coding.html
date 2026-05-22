@@ -239,7 +239,7 @@
 </head>
 <body>
     <div class="sidebar">
-        <h2>DSA Assistant</h2>
+        <h2>{{ name }}'s Coding Assistant</h2>
         
         {% for topic, questions in topics.items() %}
         <div class="topic-section">
@@ -247,6 +247,7 @@
             {% for q in questions %}
             <form action="/coding" method="POST">
                 <input type="hidden" name="question" value="{{ q }}">
+                <input type="hidden" name="name" value="{{ name }}">
                 <button type="submit" class="topic-link">{{ q }}</button>
             </form>
             {% endfor %}
@@ -270,6 +271,7 @@
 
         <div class="input-area-wrapper">
             <form action="/coding" method="POST" class="input-area">
+                <input type="hidden" name="name" value="{{ name }}">
                 <textarea name="question" placeholder="Ask a DSA question or select a topic..."></textarea>
                 <button type="submit" class="send-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>

@@ -1,8 +1,0 @@
-fastapi
-uvicorn
-python-dotenv
-langchain-groq
-scikit-learn
-requests
-ipykernel
-grok

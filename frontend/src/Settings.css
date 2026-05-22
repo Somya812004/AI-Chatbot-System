@@ -187,11 +187,11 @@
 }
 
 .select-trigger {
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
   padding: 0.6rem 1rem;
   border-radius: 12px;
-  color: #f9fafb;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -199,7 +199,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .select-trigger:hover {
@@ -227,13 +227,18 @@
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: dropdownFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .select-dropdown-list {
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes dropdownFadeIn {
@@ -243,7 +248,7 @@
 
 .select-option {
   padding: 0.75rem 1rem;
-  color: #f9fafb;
+  color: var(--text-primary);
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;

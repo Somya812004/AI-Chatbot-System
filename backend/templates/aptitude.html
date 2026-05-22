@@ -235,7 +235,7 @@
 </head>
 <body>
     <div class="sidebar">
-        <h2>Aptitude Assistant</h2>
+        <h2>{{ name }}'s Aptitude Trainer</h2>
         
         {% for topic, questions in topics.items() %}
         <div class="topic-section">
@@ -243,6 +243,7 @@
             {% for q in questions %}
             <form action="/aptitude" method="POST">
                 <input type="hidden" name="question" value="{{ q }}">
+                <input type="hidden" name="name" value="{{ name }}">
                 <button type="submit" class="topic-link">{{ q }}</button>
             </form>
             {% endfor %}

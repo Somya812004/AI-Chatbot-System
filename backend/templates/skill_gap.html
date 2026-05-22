@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSA Assistant | Placement Prep</title>
+    <title>Skill Gap Analyzer | Placement Prep</title>
     <style>
         :root {
             --bg: #050505;
             --sidebar-bg: #0a0a0f;
-            --accent: #a855f7;
+            --accent: #6366f1; /* Indigo */
             --text-main: #ffffff;
             --text-sub: #71717a;
             --card-bg: #0f0f15;
@@ -20,7 +20,7 @@
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             background-color: var(--bg);
-            background-image: radial-gradient(circle at 1px 1px, rgba(168, 85, 247, 0.05) 1px, transparent 0);
+            background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.05) 1px, transparent 0);
             background-size: 40px 40px;
             color: var(--text-main);
             display: flex;
@@ -78,7 +78,7 @@
         }
 
         .topic-link:hover {
-            background: rgba(168, 85, 247, 0.1);
+            background: rgba(99, 102, 241, 0.1);
             color: var(--accent);
         }
 
@@ -115,7 +115,7 @@
         }
 
         .hero-section h1 span {
-            background: linear-gradient(90deg, #fff, var(--accent));
+            background: linear-gradient(90deg, #fff, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -135,13 +135,16 @@
             line-height: 1.7;
             font-size: 1.05rem;
             color: #e4e4e7;
-            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            transform: translateZ(50px);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(40px) translateZ(-100px) rotateX(10deg); }
+            to { opacity: 1; transform: translateY(0) translateZ(50px) rotateX(0); }
         }
 
         .input-area-wrapper {
@@ -158,13 +161,13 @@
             width: 100%;
             max-width: 850px;
             background: #16161e;
-            border: 1px solid rgba(168, 85, 247, 0.3);
+            border: 1px solid rgba(99, 102, 241, 0.3);
             border-radius: 20px;
             padding: 0.75rem 1.25rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.1);
         }
 
         textarea {
@@ -197,30 +200,7 @@
 
         .send-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-        }
-
-        code {
-            background: #27272a;
-            padding: 0.2rem 0.4rem;
-            border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9em;
-            color: #f4f4f5;
-        }
-
-        pre {
-            background: #18181b;
-            padding: 1.5rem;
-            border-radius: 12px;
-            overflow-x: auto;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        pre code {
-            background: transparent;
-            padding: 0;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
         }
 
         /* Custom Scrollbar */
@@ -232,19 +212,35 @@
 </head>
 <body>
     <div class="sidebar">
-        <h2>DSA Assistant</h2>
+        <h2>{{ name }}'s Analyzer</h2>
         
-        {% for topic, questions in topics.items() %}
         <div class="topic-section">
-            <span class="topic-title">{{ topic }}</span>
-            {% for q in questions %}
-            <form action="/" method="POST">
-                <input type="hidden" name="question" value="{{ q }}">
-                <button type="submit" class="topic-link">{{ q }}</button>
+            <span class="topic-title">Target Roles</span>
+            <form action="/skill-gap" method="POST">
+                <input type="hidden" name="question" value="Analyze my profile for a Software Engineer role. What skills am I missing?">
+                <button type="submit" class="topic-link">Software Engineer</button>
             </form>
-            {% endfor %}
+            <form action="/skill-gap" method="POST">
+                <input type="hidden" name="question" value="Analyze my profile for a Data Scientist role. What skills am I missing?">
+                <button type="submit" class="topic-link">Data Scientist</button>
+            </form>
+            <form action="/skill-gap" method="POST">
+                <input type="hidden" name="question" value="Analyze my profile for a Full Stack Developer role. What skills am I missing?">
+                <button type="submit" class="topic-link">Full Stack Developer</button>
+            </form>
         </div>
-        {% endfor %}
+
+        <div class="topic-section">
+            <span class="topic-title">Quick Actions</span>
+            <form action="/skill-gap" method="POST">
+                <input type="hidden" name="question" value="Provide a step-by-step learning roadmap to improve my placement readiness.">
+                <button type="submit" class="topic-link">Generate Roadmap</button>
+            </form>
+            <form action="/skill-gap" method="POST">
+                <input type="hidden" name="question" value="What are the top 3 projects I should build to stand out?">
+                <button type="submit" class="topic-link">Suggest Projects</button>
+            </form>
+        </div>
     </div>
 
     <div class="main-content">
@@ -255,15 +251,15 @@
             </div>
             {% else %}
             <div class="hero-section">
-                <h1>DSA <span>Assistant</span></h1>
-                <p>Master data structures and algorithms with step-by-step guidance.</p>
+                <h1>Skill Gap <span>Analyzer</span></h1>
+                <p>Compare your profile against target roles and discover your improvement roadmap.</p>
             </div>
             {% endif %}
         </div>
 
         <div class="input-area-wrapper">
-            <form action="/" method="POST" class="input-area">
-                <textarea name="question" placeholder="Ask a DSA question or select a topic..."></textarea>
+            <form action="/skill-gap" method="POST" class="input-area">
+                <textarea name="question" placeholder="Paste your resume summary or ask for an analysis..."></textarea>
                 <button type="submit" class="send-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>

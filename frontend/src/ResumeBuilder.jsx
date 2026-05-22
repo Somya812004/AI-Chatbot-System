@@ -197,11 +197,13 @@ const ResumeBuilder = ({ userName }) => {
     setChatMessages(prev => [...prev, newUserMsg]);
     
     if (isExtraFlow) {
-      const fieldKey = OPTIONAL_SECTIONS.find(s => s.id === selectedExtras[extraStepIndex]).id;
-      setResumeData(prev => ({
-        ...prev,
-        extras: { ...prev.extras, [fieldKey]: inputValue }
-      }));
+        const fieldKey = selectedExtras[extraStepIndex] ? OPTIONAL_SECTIONS.find(s => s.id === selectedExtras[extraStepIndex])?.id : undefined;
+        if (fieldKey) {
+          setResumeData(prev => ({
+            ...prev,
+            extras: { ...prev.extras, [fieldKey]: inputValue }
+          }));
+        }
     } else {
       const fieldKey = step === 0 ? 'fullName' : steps[step - 1].key;
       
